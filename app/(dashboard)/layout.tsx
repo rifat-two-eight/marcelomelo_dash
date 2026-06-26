@@ -14,6 +14,7 @@ import {
   LogOut
 } from 'lucide-react';
 import { useRouter, usePathname } from 'next/navigation';
+import { toast } from 'sonner';
 
 const menuItems = [
   { icon: LayoutDashboard, label: 'Dashboard', href: '/dashboard' },
@@ -34,6 +35,12 @@ export default function DashboardLayout({
   const router = useRouter();
   const pathname = usePathname();
 
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    toast.success('Logged out successfully');
+    router.push('/login');
+  };
+
   return (
     <div className="min-h-screen bg-[#f8fafc]">
       {/* Mobile sidebar overlay */}
@@ -46,9 +53,8 @@ export default function DashboardLayout({
 
       {/* Sidebar */}
       <aside
-        className={`fixed top-0 left-0 z-50 h-full w-64 bg-white border-r border-gray-200 transition-transform duration-300 lg:translate-x-0 ${
-          sidebarOpen ? 'translate-x-0' : '-translate-x-full'
-        }`}
+        className={`fixed top-0 left-0 z-50 h-full w-64 bg-white border-r border-gray-200 transition-transform duration-300 lg:translate-x-0 ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'
+          }`}
       >
         <div className="p-6 border-b border-gray-200">
           <h1 className="text-xl font-bold text-[#030213]">Admin Panel</h1>
@@ -61,11 +67,10 @@ export default function DashboardLayout({
               <button
                 key={index}
                 onClick={() => router.push(item.href)}
-                className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${
-                  isActive
+                className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${isActive
                     ? 'bg-[#e0f2fe] text-[#0369a1]'
                     : 'text-gray-600 hover:bg-[#f1f5f9] hover:text-[#030213]'
-                }`}
+                  }`}
               >
                 <item.icon className="w-5 h-5" />
                 <span className="font-medium text-sm">{item.label}</span>
@@ -76,7 +81,7 @@ export default function DashboardLayout({
 
         <div className="absolute bottom-0 left-0 right-0 p-4 border-t border-gray-200">
           <button
-            onClick={() => router.push('/login')}
+            onClick={handleLogout}
             className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-red-600 hover:bg-red-50 transition-colors"
           >
             <LogOut className="w-5 h-5" />

@@ -1,8 +1,10 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Mail, Lock, Eye, EyeOff } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import axios from 'axios';
+import { toast } from 'sonner';
 
 export default function LoginPage() {
   const router = useRouter();
@@ -10,10 +12,53 @@ export default function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [remember, setRemember] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  useEffect(() => {
+    const savedEmail = localStorage.getItem('rememberedEmail');
+    const savedPassword = localStorage.getItem('rememberedPassword');
+    if (savedEmail && savedPassword) {
+      setEmail(savedEmail);
+      setPassword(savedPassword);
+      setRemember(true);
+    }
+  }, []);
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    router.push('/dashboard');
+    setIsLoading(true);
+
+    try {
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_BASE_URL}/auth/login`, {
+        email,
+        password,
+        deviceId: "postman_admin_device",
+        deviceType: "desktop",
+        platform: "postman"
+      });
+
+      const token = response.data?.data?.accessToken || response.data?.token; // Adjust based on actual API response structure
+      if (token) {
+        localStorage.setItem('token', token);
+
+        if (remember) {
+          localStorage.setItem('rememberedEmail', email);
+          localStorage.setItem('rememberedPassword', password);
+        } else {
+          localStorage.removeItem('rememberedEmail');
+          localStorage.removeItem('rememberedPassword');
+        }
+
+        toast.success('Login successful');
+        router.push('/dashboard');
+      } else {
+        toast.error('Token not received from server');
+      }
+    } catch (error: any) {
+      toast.error(error.response?.data?.message || 'Login failed. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -90,9 +135,10 @@ export default function LoginPage() {
 
           <button
             type="submit"
-            className="w-full py-3 bg-[#030213] text-white font-semibold rounded-xl hover:bg-[#1a1929] transition-colors"
+            disabled={isLoading}
+            className="w-full py-3 bg-[#030213] text-white font-semibold rounded-xl hover:bg-[#1a1929] transition-colors disabled:opacity-70"
           >
-            Sign In
+            {isLoading ? 'Signing In...' : 'Sign In'}
           </button>
         </form>
       </div>
