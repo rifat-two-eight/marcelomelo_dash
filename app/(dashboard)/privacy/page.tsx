@@ -1,95 +1,114 @@
-"use client";
+'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import axios from 'axios';
+import { toast } from 'sonner';
+import { FileCheck } from 'lucide-react';
 
-export default function PrivacyPage() {
-  const [content, setContent] = useState(`We are committed to protecting your privacy. This Privacy Policy explains how we collect, use, and disclose your information...
+export default function PrivacyPolicyPage() {
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  
+  const [title, setTitle] = useState('Privacy Policy');
+  const [content, setContent] = useState('');
 
-1. Information Collection
-We collect information you provide directly to us, when you use our services, or through cookies.
+  // Fetch existing privacy policy
+  useEffect(() => {
+    const fetchPolicy = async () => {
+      try {
+        const token = localStorage.getItem('token');
+        const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}/settings/legal/privacy_policy`, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        
+        const data = response.data?.data;
+        if (data) {
+          if (data.title) setTitle(data.title);
+          if (data.content) setContent(data.content);
+        }
+      } catch (error) {
+        console.error("Error fetching Privacy Policy", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    fetchPolicy();
+  }, []);
 
-2. How We Use Information
-We use the information we collect to provide, maintain, and improve our services.
+  const handleSave = async (publish: boolean) => {
+    setSaving(true);
+    try {
+      const token = localStorage.getItem('token');
+      const payload = {
+        title,
+        content,
+        publish
+      };
 
-3. Information Sharing
-We do not share, sell, or rent your personal information to third parties.
+      const response = await axios.put(
+        `${process.env.NEXT_PUBLIC_BASE_URL}/settings/legal/privacy_policy`,
+        payload,
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
 
-4. Data Security
-We implement appropriate security measures to protect your personal information.
+      toast.success(response.data?.message || 'Privacy Policy published successfully');
+    } catch (error: any) {
+      console.error("Error saving privacy policy", error);
+      toast.error(error.response?.data?.message || 'Failed to save Privacy Policy');
+    } finally {
+      setSaving(false);
+    }
+  };
 
-5. Your Rights
-You have the right to access, update, or delete your information.
-
-6. Cookies
-We use cookies to enhance your experience on our website.
-
-7. Changes to This Policy
-We may update this privacy policy from time to time.`);
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-[400px]">
+        <div className="w-8 h-8 border-4 border-gray-900 border-t-transparent rounded-full animate-spin" />
+      </div>
+    );
+  }
 
   return (
-    <div className="space-y-6">
+    <div className="max-w-4xl mx-auto space-y-6">
       {/* Header */}
       <div>
         <h1 className="text-2xl font-bold text-gray-800">Privacy Policy</h1>
-        <p className="text-gray-500 text-sm mt-1">Manage user information and data handling guidelines</p>
+        <p className="text-gray-500 text-sm mt-1">Manage the privacy policy for your platform.</p>
       </div>
 
-      {/* Content */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Left Column - Editor */}
-        <div className="lg:col-span-2 space-y-6">
-          {/* Editor */}
-          <div className="bg-white rounded-2xl border border-gray-200 p-5">
-            <h2 className="text-sm font-semibold text-gray-700 mb-4">Editor</h2>
-            <div className="space-y-3">
-              <div>
-                <label className="block text-xs font-medium text-gray-600 mb-1">Page Title</label>
-                <input
-                  type="text"
-                  defaultValue="Privacy Policy"
-                  className="w-full px-4 py-2.5 border border-gray-200 rounded-lg bg-gray-100 text-sm"
-                />
-              </div>
-              <div>
-                <label className="block text-xs font-medium text-gray-600 mb-1">Last Updated Date</label>
-                <input
-                  type="text"
-                  defaultValue="2025-06-03"
-                  className="w-full px-4 py-2.5 border border-gray-200 rounded-lg bg-gray-100 text-sm"
-                />
-              </div>
-              <div>
-                <label className="block text-xs font-medium text-gray-600 mb-1">Privacy Policy Content</label>
-                <textarea
-                  value={content}
-                  onChange={(e) => setContent(e.target.value)}
-                  rows={14}
-                  className="w-full px-4 py-2.5 border border-gray-200 rounded-lg bg-gray-100 text-sm"
-                />
-              </div>
-            </div>
-          </div>
-
-          {/* Preview */}
-          <div className="bg-white rounded-2xl border border-gray-200 p-5">
-            <h2 className="text-sm font-semibold text-gray-700 mb-4">Preview</h2>
-            <div className="border border-gray-200 rounded-xl p-6 max-w-md">
-              <h3 className="text-base font-semibold text-gray-800 mb-1">Privacy Policy</h3>
-              <p className="text-xs text-gray-500 mb-4">Last updated: 2025-06-03</p>
-              <div className="text-xs text-gray-600 whitespace-pre-line">
-                {content}
-              </div>
-            </div>
-          </div>
+      <div className="bg-white rounded-2xl border border-gray-200 p-6 shadow-sm space-y-6">
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">Document Title</label>
+          <input 
+            type="text"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            className="w-full px-4 py-2.5 border border-gray-200 rounded-lg bg-gray-50 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900"
+            placeholder="e.g. Privacy Policy"
+          />
         </div>
 
-        {/* Right Column - Actions */}
-        <div className="space-y-3">
-          <button className="w-full bg-gray-900 text-white px-4 py-2 rounded-lg text-xs font-medium hover:bg-gray-800 transition-colors">
-            Save Changes
-          </button>
-          <button className="w-full bg-white border border-gray-200 text-gray-700 px-4 py-2 rounded-lg text-xs font-medium hover:bg-gray-50 transition-colors">
-            Publish Changes
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">Document Content</label>
+          <textarea 
+            value={content}
+            onChange={(e) => setContent(e.target.value)}
+            rows={15}
+            className="w-full px-4 py-3 border border-gray-200 rounded-lg bg-gray-50 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900 resize-y font-mono"
+            placeholder="We value your privacy. This privacy policy explains how we collect and protect your data..."
+          />
+          <p className="text-xs text-gray-500 mt-2">You can write your privacy policy here. This will be displayed to the users on the app.</p>
+        </div>
+
+        <div className="pt-4 border-t border-gray-100 flex items-center justify-end">
+          <button
+            onClick={() => handleSave(true)}
+            disabled={saving}
+            className="flex items-center gap-2 px-5 py-2.5 bg-gray-900 text-white rounded-lg text-sm font-medium hover:bg-gray-800 transition-colors disabled:opacity-70"
+          >
+            <FileCheck className="w-4 h-4" />
+            Publish
           </button>
         </div>
       </div>

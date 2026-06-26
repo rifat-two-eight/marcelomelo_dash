@@ -3,30 +3,45 @@
 import { useState } from 'react';
 import { Mail, ArrowLeft } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import axios from 'axios';
+import { toast } from 'sonner';
+import Image from 'next/image';
 
 export default function ForgotPasswordPage() {
   const router = useRouter();
   const [email, setEmail] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [isSent, setIsSent] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    router.push('/otp');
+    setIsLoading(true);
+
+    try {
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_BASE_URL}/auth/forgot-password`, {
+        email
+      });
+
+      toast.success(response.data?.message || 'OTP sent to your email.');
+      // Redirect to reset password page to enter OTP
+      router.push(`/reset-password?email=${encodeURIComponent(email)}`);
+    } catch (error: any) {
+      console.error("Error in forgot password", error);
+      toast.error(error.response?.data?.message || 'Failed to send reset link. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#f8fafc]">
+    <div className="min-h-screen flex flex-col items-center justify-center bg-[#f8fafc] px-4">
+      <div className="mb-8">
+        <Image src="/logo.svg" alt="Logo" width={160} height={160} className="w-auto h-auto max-w-[200px]" />
+      </div>
       <div className="w-full max-w-md bg-white rounded-2xl shadow-xl p-8">
-        <button
-          onClick={() => router.push('/login')}
-          className="flex items-center gap-2 text-gray-600 hover:text-[#030213] mb-6"
-        >
-          <ArrowLeft className="w-5 h-5" />
-          <span>Back to Login</span>
-        </button>
-
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-[#030213] mb-2">Forgot Password?</h1>
-          <p className="text-gray-600">No worries! Enter your email and we'll send you a verification code.</p>
+          <h1 className="text-3xl font-bold text-[#030213] mb-2">Forgot Password</h1>
+          <p className="text-gray-600">Enter your email to receive an OTP</p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">
@@ -42,7 +57,7 @@ export default function ForgotPasswordPage() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 style={{ color: '#030213', backgroundColor: 'white' }}
-                className="w-full pl-12 pr-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#030213]/20 focus:border-[#030213] transition-all dark-placeholder"
+                className="w-full pl-12 pr-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#030213]/20 focus:border-[#030213] transition-all"
                 placeholder="Enter your email"
                 required
               />
@@ -51,9 +66,23 @@ export default function ForgotPasswordPage() {
 
           <button
             type="submit"
-            className="w-full py-3 bg-[#030213] text-white font-semibold rounded-xl hover:bg-[#1a1929] transition-colors"
+            disabled={isLoading}
+            className="w-full py-3 bg-[#030213] text-white font-semibold rounded-xl hover:bg-[#1a1929] transition-colors disabled:opacity-70 flex justify-center items-center gap-2"
           >
-            Send Verification Code
+            {isLoading ? (
+              <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+            ) : (
+              'Send OTP'
+            )}
+          </button>
+          
+          <button
+            type="button"
+            onClick={() => router.push('/login')}
+            className="w-full flex items-center justify-center gap-2 text-sm text-gray-600 hover:text-[#030213] transition-colors font-medium"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            Back to login
           </button>
         </form>
       </div>

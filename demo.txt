@@ -1,94 +1,53 @@
 {
     "success": true,
-    "message": "Active subscription plans retrieved.",
-    "data": [
-        {
-            "features": {
-                "tradeOffersUnlocked": false
-            },
-            "_id": "6a37075f9509d0578844ea04",
-            "name": "Free",
-            "description": "For casual enthusiasts",
-            "price": 0,
-            "planType": "free",
-            "listingLimit": 5,
-            "listingValidityDays": 10,
-            "durationDays": 30,
-            "badge": "",
-            "displayFeatures": [
-                "5 free listings valid to use as the first 30 days after the profile is created",
-                "Each listing is valid for 10 days"
-            ],
-            "isActive": true,
-            "createdAt": "2026-06-20T21:34:23.447Z",
-            "updatedAt": "2026-06-20T21:34:23.447Z"
+    "message": "Profile updated successfully.",
+    "data": {
+        "userId": "6a3eb128a8766c53d7d0dc05",
+        "username": "rifat12345",
+        "email": "sikino4857@disiok.com",
+        "role": "admin",
+        "status": "active",
+        "firstName": "Super Admin User",
+        "lastName": "rifat",
+        "displayName": "Super Admin User rifat",
+        "bio": "",
+        "dateOfBirth": null,
+        "gender": null,
+        "profileImage": "https://bondi-dev.nasimmondal.dev/uploads/profiles/sxy1atzilh-1782510392545-beach-icon-bg-png-dehraflicks.png",
+        "coverImage": "",
+        "country": "",
+        "city": "",
+        "language": "English",
+        "sellerRating": 0,
+        "averageRating": 0,
+        "reputationScore": 0,
+        "totalReviews": 0,
+        "ratingDistribution": {
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0,
+            "5": 0
         },
-        {
-            "features": {
-                "tradeOffersUnlocked": true
-            },
-            "_id": "6a37075f9509d0578844ea05",
-            "name": "Silver Plan",
-            "description": "Per listing",
-            "price": 5,
-            "planType": "per_listing",
-            "listingLimit": 1,
-            "listingValidityDays": 15,
-            "durationDays": 15,
-            "badge": "Popular",
-            "displayFeatures": [
-                "Pay $5 for each listing you post",
-                "Each listing valid for 15 days",
-                "Trade offers unlocked"
-            ],
-            "isActive": true,
-            "createdAt": "2026-06-20T21:34:23.448Z",
-            "updatedAt": "2026-06-20T21:34:23.448Z"
-        },
-        {
-            "features": {
-                "tradeOffersUnlocked": true
-            },
-            "_id": "6a37075f9509d0578844ea06",
-            "name": "Gold Plan",
-            "description": "Per package",
-            "price": 25,
-            "planType": "package",
-            "listingLimit": 10,
-            "listingValidityDays": 20,
-            "durationDays": 60,
-            "badge": "Popular",
-            "displayFeatures": [
-                "10 listings to use within 60 days",
-                "Each listing valid for 20 days",
-                "Trade offers unlocked"
-            ],
-            "isActive": true,
-            "createdAt": "2026-06-20T21:34:23.448Z",
-            "updatedAt": "2026-06-20T21:34:23.448Z"
-        },
-        {
-            "features": {
-                "tradeOffersUnlocked": true
-            },
-            "_id": "6a37075f9509d0578844ea07",
-            "name": "Diamond Plan",
-            "description": "Per month",
-            "price": 100,
-            "planType": "monthly",
-            "listingLimit": -1,
-            "listingValidityDays": -1,
-            "durationDays": 30,
-            "badge": "Popular",
-            "displayFeatures": [
-                "Unlimited listings for the month",
-                "Listings valid for the whole subscription",
-                "Trade offers unlocked",
-                "Auto-renews unless you cancel 1 day before expiry"
-            ],
-            "isActive": true,
-            "createdAt": "2026-06-20T21:34:23.448Z",
-            "updatedAt": "2026-06-20T21:34:23.448Z"
-        }
-    ]
+        "completedTrades": 0,
+        "responseRate": 100,
+        "isVerifiedSeller": false,
+        "isOnline": false,
+        "lastSeen": "2026-06-26T17:04:40.397Z",
+        "totalListings": 0,
+        "totalFriends": 0,
+        "totalTrades": 0,
+        "showEmail": false,
+        "showLocation": true,
+        "profileVisibility": "public",
+        "friendVisibility": "public",
+        "headerThemeColor": "",
+        "isPhonePublic": false,
+        "pixKeyType": "",
+        "cpf": "",
+        "phone": "",
+        "profileCompletionPercentage": 40,
+        "totalGroups": 0,
+        "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2YTNlYjEyOGE4NzY2YzUzZDdkMGRjMDUiLCJ1c2VyTmFtZSI6IlN1cGVyIEFkbWluIFVzZXIgcmlmYXQiLCJlbWFpbCI6InNpa2lubzQ4NTdAZGlzaW9rLmNvbSIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc4MjUxMDM5MiwiZXhwIjoxNzgyNTk2NzkyfQ.2oMcBJ-UOF-r2p9nDpAUWTidP_yw-jL8_DqtfsunHoE"
+    }
 }

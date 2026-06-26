@@ -5,6 +5,7 @@ import { Mail, Lock, Eye, EyeOff } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import axios from 'axios';
 import { toast } from 'sonner';
+import Image from 'next/image';
 
 export default function LoginPage() {
   const router = useRouter();
@@ -62,7 +63,10 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#f8fafc]">
+    <div className="min-h-screen flex flex-col items-center justify-center bg-[#f8fafc] px-4">
+      <div className="mb-8">
+        <Image src="/logo.svg" alt="Logo" width={160} height={160} className="w-auto h-auto max-w-[200px]" />
+      </div>
       <div className="w-full max-w-md bg-white rounded-2xl shadow-xl p-8">
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold text-[#030213] mb-2">Welcome Back</h1>
@@ -126,6 +130,7 @@ export default function LoginPage() {
               <span className="text-sm text-gray-600">Remember me</span>
             </label>
             <button
+              type="button"
               onClick={() => router.push('/forgot-password')}
               className="text-sm text-[#030213] hover:underline font-medium"
             >
